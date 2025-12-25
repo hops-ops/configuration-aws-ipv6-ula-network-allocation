@@ -9,6 +9,6 @@ metadata:
 spec:
   dependsOn:
   - provider: ghcr.io/crossplane-contrib/provider-aws-ec2
-    version: ">=v2.2.0"
+    version: ">=v2.3.0"
   - function: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
     version: ">=v0.5.1"
