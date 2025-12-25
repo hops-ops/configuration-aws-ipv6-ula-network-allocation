@@ -30,7 +30,10 @@ jobs:
         [
           { "example": "examples/ipv6ulanetworkallocations/minimal.yaml" },
           { "example": "examples/ipv6ulanetworkallocations/standard.yaml" },
-          { "example": "examples/ipv6ulanetworkallocations/custom-sizes.yaml" }
+          { "example": "examples/ipv6ulanetworkallocations/custom-sizes.yaml" },
+          { "example": "examples/ipv6ulanetworkallocations/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/1/" },
+          { "example": "examples/ipv6ulanetworkallocations/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/2/" },
+          { "example": "examples/ipv6ulanetworkallocations/standard.yaml", "observed_resources": "examples/test/mocks/observed-resources/standard/steps/3/" }
         ]
       api_path: apis/ipv6ulanetworkallocations
       error_on_missing_schemas: true
