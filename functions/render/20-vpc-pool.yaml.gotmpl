@@ -1,0 +1,47 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+# VPC Pool - child of regional ULA pool, allocates /48 (or configured size) for this network
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPool
+metadata:
+  name: {{ $name }}-vpc
+  annotations:
+    {{ setResourceNameAnnotation "vpc-pool" }}
+  labels:
+    hops.ops.com.ai/network-allocation: {{ $name }}
+    hops.ops.com.ai/pool-type: vpc
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    addressFamily: ipv6
+    sourceIpamPoolId: {{ $regionalPoolId }}
+    allocationDefaultNetmaskLength: {{ $vpcNetmaskLength }}
+    locale: {{ $awsRegion }}
+    region: {{ $awsRegion }}
+    description: "VPC pool for {{ $name }}"
+    tags:
+      {{ $defaultTags | toYaml | nindent 6 }}
+      Name: {{ $name }}-vpc-pool
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidr
+metadata:
+  name: {{ $name }}-vpc
+  annotations:
+    {{ setResourceNameAnnotation "vpc-pool-cidr" }}
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    ipamPoolIdRef:
+      name: {{ $name }}-vpc
+    netmaskLength: {{ $vpcNetmaskLength }}
+    region: {{ $awsRegion }}
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}

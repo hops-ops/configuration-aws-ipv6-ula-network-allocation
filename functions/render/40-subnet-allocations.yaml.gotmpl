@@ -1,0 +1,53 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+# Subnet Allocations - created after subnet pools are ready
+# Creates VPCIpamPoolCidrAllocation for each subnet (per AZ, per type)
+
+{{ if $subnetPoolsFullyReady }}
+  {{ range $az := $availabilityZones }}
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidrAllocation
+metadata:
+  name: {{ $name }}-private-{{ $az }}
+  annotations:
+    {{ setResourceNameAnnotation (printf "subnet-private-%s" $az) }}
+  labels:
+    hops.ops.com.ai/network-allocation: {{ $name }}
+    hops.ops.com.ai/subnet-type: private
+    hops.ops.com.ai/availability-zone: {{ $az }}
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    ipamPoolId: {{ $observedPrivatePoolId }}
+    netmaskLength: {{ $privateNetmaskLength }}
+    region: {{ $awsRegion }}
+    description: "Private subnet {{ $az }} for {{ $name }}"
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidrAllocation
+metadata:
+  name: {{ $name }}-public-{{ $az }}
+  annotations:
+    {{ setResourceNameAnnotation (printf "subnet-public-%s" $az) }}
+  labels:
+    hops.ops.com.ai/network-allocation: {{ $name }}
+    hops.ops.com.ai/subnet-type: public
+    hops.ops.com.ai/availability-zone: {{ $az }}
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    ipamPoolId: {{ $observedPublicPoolId }}
+    netmaskLength: {{ $publicNetmaskLength }}
+    region: {{ $awsRegion }}
+    description: "Public subnet {{ $az }} for {{ $name }}"
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+  {{ end }}
+{{ end }}

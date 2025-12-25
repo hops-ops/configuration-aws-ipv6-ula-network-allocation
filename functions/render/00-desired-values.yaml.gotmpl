@@ -1,0 +1,37 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+{{ $xr := getCompositeResource . }}
+{{ $spec := $xr.spec }}
+{{ $metadata := $xr.metadata }}
+
+{{ $name := $metadata.name }}
+{{ $namespace := $metadata.namespace | default "default" }}
+
+# Regional ULA pool ID from aws-ipam status (required)
+{{ $regionalPoolId := $spec.regionalPoolId }}
+
+# Management policies
+{{ $managementPolicies := $spec.managementPolicies | default (list "*") }}
+
+# AWS configuration
+{{ $aws := $spec.aws | default (dict) }}
+{{ $awsProviderConfig := $aws.providerConfig | default "default" }}
+{{ $awsRegion := $aws.region | default "us-east-1" }}
+
+# VPC sizing - /48 default for ULA IPv6
+{{ $vpc := $spec.vpc | default (dict) }}
+{{ $vpcNetmaskLength := $vpc.netmaskLength | default 48 }}
+
+# Subnet configuration - /64 is required for AWS IPv6 subnets
+{{ $subnets := $spec.subnets | default (dict) }}
+{{ $availabilityZones := $subnets.availabilityZones | default (list "a" "b" "c") }}
+{{ $subnetTypes := $subnets.types | default (dict) }}
+
+{{ $publicConfig := $subnetTypes.public | default (dict) }}
+{{ $privateConfig := $subnetTypes.private | default (dict) }}
+{{ $publicNetmaskLength := $publicConfig.netmaskLength | default 64 }}
+{{ $privateNetmaskLength := $privateConfig.netmaskLength | default 64 }}
+
+# Default tags
+{{ $defaultTags := dict "hops" "true" "managed-by" "crossplane" "address-family" "ipv6" }}

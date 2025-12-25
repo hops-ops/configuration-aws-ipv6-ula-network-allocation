@@ -1,0 +1,19 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+# Status - surfaces observed values for downstream consumers
+---
+apiVersion: {{ $xr.apiVersion }}
+kind: {{ $xr.kind }}
+status:
+  ready: {{ $allSubnetsReady }}
+  cidr: {{ $observedVpcCidr | default "Pending" }}
+  vpcPoolId: {{ $observedVpcPoolId | default "Pending" }}
+  privatePoolId: {{ $observedPrivatePoolId | default "Pending" }}
+  publicPoolId: {{ $observedPublicPoolId | default "Pending" }}
+  {{ if $allSubnetsReady }}
+  subnets:
+    {{ range $key, $value := $subnetCidrs }}
+    {{ $key }}: {{ $value }}
+    {{ end }}
+  {{ end }}

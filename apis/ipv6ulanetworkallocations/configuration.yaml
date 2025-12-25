@@ -1,0 +1,14 @@
+apiVersion: meta.pkg.crossplane.io/v1alpha1
+kind: Configuration
+metadata:
+  name: configuration-aws-ipv6-ula-network-allocation
+  annotations:
+    meta.crossplane.io/maintainer: Patrick Lee Scott
+    meta.crossplane.io/source: github.com/hops-ops/configuration-aws-ipv6-ula-network-allocation
+    meta.crossplane.io/description: A Configuration package that reserves ULA IPv6 VPC and subnet CIDRs from IPAM pools.
+spec:
+  dependsOn:
+  - provider: ghcr.io/crossplane-contrib/provider-aws-ec2
+    version: ">=v2.2.0"
+  - function: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
+    version: ">=v0.5.1"

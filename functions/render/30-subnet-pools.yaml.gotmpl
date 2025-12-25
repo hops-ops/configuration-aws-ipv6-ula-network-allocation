@@ -1,0 +1,95 @@
+# code: language=yaml
+# yaml-language-server: $schema=../../.up/json/models/index.schema.json
+
+# Subnet Pools - created after VPC pool is ready
+# Private and public pools are children of VPC pool
+
+{{ if $vpcPoolFullyReady }}
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPool
+metadata:
+  name: {{ $name }}-private
+  annotations:
+    {{ setResourceNameAnnotation "subnet-pool-private" }}
+  labels:
+    hops.ops.com.ai/network-allocation: {{ $name }}
+    hops.ops.com.ai/pool-type: subnet-private
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    addressFamily: ipv6
+    sourceIpamPoolId: {{ $observedVpcPoolId }}
+    allocationDefaultNetmaskLength: {{ $privateNetmaskLength }}
+    locale: {{ $awsRegion }}
+    region: {{ $awsRegion }}
+    description: "Private subnet pool for {{ $name }}"
+    tags:
+      {{ $defaultTags | toYaml | nindent 6 }}
+      Name: {{ $name }}-private-subnet-pool
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidr
+metadata:
+  name: {{ $name }}-private
+  annotations:
+    {{ setResourceNameAnnotation "subnet-pool-private-cidr" }}
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    ipamPoolIdRef:
+      name: {{ $name }}-private
+    cidr: {{ $observedVpcCidr }}
+    region: {{ $awsRegion }}
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPool
+metadata:
+  name: {{ $name }}-public
+  annotations:
+    {{ setResourceNameAnnotation "subnet-pool-public" }}
+  labels:
+    hops.ops.com.ai/network-allocation: {{ $name }}
+    hops.ops.com.ai/pool-type: subnet-public
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    addressFamily: ipv6
+    sourceIpamPoolId: {{ $observedVpcPoolId }}
+    allocationDefaultNetmaskLength: {{ $publicNetmaskLength }}
+    locale: {{ $awsRegion }}
+    region: {{ $awsRegion }}
+    description: "Public subnet pool for {{ $name }}"
+    tags:
+      {{ $defaultTags | toYaml | nindent 6 }}
+      Name: {{ $name }}-public-subnet-pool
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+
+---
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidr
+metadata:
+  name: {{ $name }}-public
+  annotations:
+    {{ setResourceNameAnnotation "subnet-pool-public-cidr" }}
+spec:
+  managementPolicies: {{ $managementPolicies | toJson }}
+  forProvider:
+    ipamPoolIdRef:
+      name: {{ $name }}-public
+    cidr: {{ $observedVpcCidr }}
+    region: {{ $awsRegion }}
+  providerConfigRef:
+    kind: ProviderConfig
+    name: {{ $awsProviderConfig }}
+{{ end }}

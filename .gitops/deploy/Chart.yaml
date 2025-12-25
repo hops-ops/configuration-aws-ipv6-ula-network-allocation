@@ -1,0 +1,5 @@
+apiVersion: v2
+name: configuration-aws-ipv6-ula-network-allocation
+version: 0.0.0
+description: A Helm chart for aws-ipv6-ula-network-allocation configuration
+appVersion: v1.0.0

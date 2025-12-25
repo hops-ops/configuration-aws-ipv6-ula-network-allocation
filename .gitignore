@@ -1,0 +1,5 @@
+tests/e2etest-*/aws-creds
+tests/**/secrets/
+.tmp/
+_output/
+.up/

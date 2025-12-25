@@ -1,0 +1,24 @@
+apiVersion: meta.dev.upbound.io/v2alpha1
+kind: Project
+metadata:
+  name: configuration-aws-ipv6-ula-network-allocation
+spec:
+  dependsOn:
+  - apiVersion: pkg.crossplane.io/v1
+    kind: Provider
+    package: xpkg.crossplane.io/crossplane-contrib/provider-aws-ec2
+    version: '>=v2.2.0'
+  - apiVersion: pkg.crossplane.io/v1
+    kind: Function
+    package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
+    version: '>=v0.5.1'
+  description: XRD for reserving ULA IPv6 VPC and subnet CIDRs from IPAM pools.
+  license: Apache-2.0
+  maintainer: Patrick Lee Scott <pat@patscott.io>
+  readme: |
+    # configuration-aws-ipv6-ula-network-allocation
+
+    Bridge between IPAM (address space) and Network (infrastructure).
+    Reserves ULA IPv6 VPC (/48) and subnet (/64) CIDRs via IPAM pool allocations.
+  repository: ghcr.io/hops-ops/configuration-aws-ipv6-ula-network-allocation
+  source: github.com/hops-ops/configuration-aws-ipv6-ula-network-allocation

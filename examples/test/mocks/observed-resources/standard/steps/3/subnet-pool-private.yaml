@@ -1,0 +1,14 @@
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPool
+metadata:
+  name: prod-east-private
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "subnet-pool-private"
+    crossplane.io/composition-resource-name: "subnet-pool-private"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+  atProvider:
+    id: ipam-pool-private-0abc123def456
+    arn: arn:aws:ec2:us-east-1:123456789012:ipam-pool/ipam-pool-private-0abc123def456

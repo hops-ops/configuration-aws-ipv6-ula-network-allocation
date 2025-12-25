@@ -1,0 +1,13 @@
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidr
+metadata:
+  name: prod-east-public
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "subnet-pool-public-cidr"
+    crossplane.io/composition-resource-name: "subnet-pool-public-cidr"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+  atProvider:
+    id: ipam-pool-cidr-public-0abc123

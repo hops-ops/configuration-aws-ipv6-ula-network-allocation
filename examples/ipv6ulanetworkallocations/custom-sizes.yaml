@@ -1,0 +1,27 @@
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IPv6ULANetworkAllocation
+metadata:
+  name: dev-west
+  namespace: infra
+spec:
+  # Regional ULA pool ID from aws-ipam status
+  regionalPoolId: ipam-pool-0123456789abcdef0
+
+  aws:
+    providerConfig: default
+    region: us-west-2
+
+  # Smaller VPC for dev - /56 instead of /48
+  vpc:
+    netmaskLength: 56
+
+  # Only 2 AZs, but subnets must still be /64 (AWS requirement)
+  subnets:
+    availabilityZones:
+    - a
+    - b
+    types:
+      public:
+        netmaskLength: 64
+      private:
+        netmaskLength: 64

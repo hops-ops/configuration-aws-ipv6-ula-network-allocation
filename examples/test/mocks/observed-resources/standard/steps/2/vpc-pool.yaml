@@ -1,0 +1,14 @@
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPool
+metadata:
+  name: prod-east-vpc
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "vpc-pool"
+    crossplane.io/composition-resource-name: "vpc-pool"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+  atProvider:
+    id: ipam-pool-vpc-0abc123def456
+    arn: arn:aws:ec2:us-east-1:123456789012:ipam-pool/ipam-pool-vpc-0abc123def456

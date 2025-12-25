@@ -1,0 +1,14 @@
+apiVersion: ec2.aws.m.upbound.io/v1beta1
+kind: VPCIpamPoolCidrAllocation
+metadata:
+  name: prod-east-private-b
+  annotations:
+    gotemplating.fn.crossplane.io/composition-resource-name: "subnet-private-b"
+    crossplane.io/composition-resource-name: "subnet-private-b"
+status:
+  conditions:
+    - type: Ready
+      status: "True"
+  atProvider:
+    id: ipam-pool-cidr-alloc-private-b
+    cidr: "fd00:1234:5678:0101::/64"

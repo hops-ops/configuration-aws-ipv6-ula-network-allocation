@@ -1,0 +1,8 @@
+apiVersion: aws.hops.ops.com.ai/v1alpha1
+kind: IPv6ULANetworkAllocation
+metadata:
+  name: prod-east
+  namespace: infra
+spec:
+  # Required: regional ULA pool ID from aws-ipam status
+  regionalPoolId: ipam-pool-0123456789abcdef0

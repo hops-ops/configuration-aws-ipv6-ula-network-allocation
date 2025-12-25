@@ -1,0 +1,132 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: ipv6ulanetworkallocations.aws.hops.ops.com.ai
+spec:
+  scope: Namespaced
+  group: aws.hops.ops.com.ai
+  names:
+    kind: IPv6ULANetworkAllocation
+    plural: ipv6ulanetworkallocations
+  versions:
+  - name: v1alpha1
+    referenceable: true
+    served: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        description: |
+          IPv6ULANetworkAllocation bridges IPAM and Network by creating per-network pools
+          and reserving ULA IPv6 CIDRs via VPCIpamPoolCidrAllocation. Exposes allocated
+          CIDRs in status for Network to consume.
+
+          ULA (Unique Local Address) uses the fd00::/8 private address space.
+          VPCs typically get /48, subnets always get /64 (AWS requirement).
+        required:
+        - spec
+        properties:
+          spec:
+            type: object
+            description: Desired state for the private IPv6 network allocation.
+            required:
+            - regionalPoolId
+            properties:
+              managementPolicies:
+                type: array
+                description: Management operations permitted on composed resources.
+                items:
+                  type: string
+                  enum:
+                  - "*"
+                  - Create
+                  - Observe
+                  - Update
+                  - Delete
+                  - LateInitialize
+                default:
+                - "*"
+              regionalPoolId:
+                type: string
+                description: |
+                  ID of the regional ULA IPAM pool to allocate from (from aws-ipam status).
+                  This pool should be a /40 or /44 regional pool from your ULA /32.
+              aws:
+                type: object
+                description: AWS configuration.
+                properties:
+                  providerConfig:
+                    type: string
+                    description: ProviderConfig for AWS API operations. Defaults to "default".
+                  region:
+                    type: string
+                    description: AWS region for the allocation. Defaults to us-east-1.
+              vpc:
+                type: object
+                description: VPC sizing configuration.
+                properties:
+                  netmaskLength:
+                    type: integer
+                    description: Netmask length for the VPC ULA CIDR block. Defaults to 48.
+                    minimum: 44
+                    maximum: 60
+                    default: 48
+              subnets:
+                type: object
+                description: Subnet layout configuration.
+                properties:
+                  availabilityZones:
+                    type: array
+                    description: Availability zone suffixes (a, b, c). Defaults to [a, b, c].
+                    items:
+                      type: string
+                    default:
+                    - a
+                    - b
+                    - c
+                  types:
+                    type: object
+                    description: Subnet type configurations.
+                    properties:
+                      public:
+                        type: object
+                        description: Public subnet configuration.
+                        properties:
+                          netmaskLength:
+                            type: integer
+                            description: Netmask length for public subnets. Must be 64 (AWS requirement).
+                            minimum: 64
+                            maximum: 64
+                            default: 64
+                      private:
+                        type: object
+                        description: Private subnet configuration.
+                        properties:
+                          netmaskLength:
+                            type: integer
+                            description: Netmask length for private subnets. Must be 64 (AWS requirement).
+                            minimum: 64
+                            maximum: 64
+                            default: 64
+          status:
+            type: object
+            description: Observed state of the private IPv6 network allocation.
+            properties:
+              ready:
+                type: boolean
+                description: True when all allocations are complete.
+              cidr:
+                type: string
+                description: Allocated VPC ULA CIDR block.
+              vpcPoolId:
+                type: string
+                description: ID of the VPC IPAM pool.
+              privatePoolId:
+                type: string
+                description: ID of the private subnet IPAM pool.
+              publicPoolId:
+                type: string
+                description: ID of the public subnet IPAM pool.
+              subnets:
+                type: object
+                description: Map of subnet name to allocated CIDR.
+                x-kubernetes-preserve-unknown-fields: true

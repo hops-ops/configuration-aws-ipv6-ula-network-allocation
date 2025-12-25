@@ -1,0 +1,16 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: ipv6ulanetworkallocations.aws.hops.ops.com.ai
+spec:
+  compositeTypeRef:
+    apiVersion: aws.hops.ops.com.ai/v1alpha1
+    kind: IPv6ULANetworkAllocation
+  mode: Pipeline
+  pipeline:
+  - functionRef:
+      name: hops-ops-configuration-aws-ipv6-ula-network-allocationrender
+    step: render
+  - functionRef:
+      name: crossplane-contrib-function-auto-ready
+    step: crossplane-contrib-function-auto-ready
