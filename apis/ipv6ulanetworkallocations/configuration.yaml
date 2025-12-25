@@ -11,4 +11,4 @@ spec:
   - provider: ghcr.io/crossplane-contrib/provider-aws-ec2
     version: ">=v2.2.0"
   - function: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
-    version: ">=v0.5.1"
+    version: ">=v0.6.0"

@@ -11,7 +11,7 @@ spec:
   - apiVersion: pkg.crossplane.io/v1
     kind: Function
     package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready
-    version: '>=v0.5.1'
+    version: '>=v0.6.0'
   description: XRD for reserving ULA IPv6 VPC and subnet CIDRs from IPAM pools.
   license: Apache-2.0
   maintainer: Patrick Lee Scott <pat@patscott.io>
