@@ -18,6 +18,7 @@ spec:
   managementPolicies: {{ $managementPolicies | toJson }}
   forProvider:
     addressFamily: ipv6
+    ipamScopeId: {{ $scopeId }}
     sourceIpamPoolId: {{ $observedVpcPoolId }}
     allocationDefaultNetmaskLength: 64
     {{- if $awsLocale }}
