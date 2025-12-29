@@ -24,7 +24,7 @@
 
 # AWS configuration - at spec level (matching IPv4)
 {{ $awsRegion := $spec.region }}
-{{ $awsLocale := $spec.locale | default "" }}
+{{ $awsLocale := $spec.locale | default $awsRegion }}
 
 # Default tags merged with user-provided tags
 {{ $defaultTags := dict "hops" "true" "managed-by" "crossplane" "address-family" "ipv6" }}
